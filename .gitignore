@@ -5,4 +5,8 @@ mini-todo/packages
 
 mini-todo/build/web/packages/$sdk
 
+# build files not needed
 *.dart.precompiled.js
+
+# interop.js no longer needed
+mini-todo/build/web/packages/browser/interop.js
