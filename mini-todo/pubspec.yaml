@@ -2,3 +2,6 @@ name: mini_todo
 description: A sample todo application
 dependencies:
   browser: any
+  idb_shim:
+    git: https://github.com/alextekartik/idb_shim.dart
+#    path: ../../idb_shim.dart

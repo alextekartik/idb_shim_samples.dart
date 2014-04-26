@@ -9,6 +9,12 @@ body {
   font: 14px Arial;
 }
 
+#idb {
+  background-color: #EEE;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
 a {
   color: #3D5C9D;
   cursor: pointer;

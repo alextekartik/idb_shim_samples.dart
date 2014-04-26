@@ -6,11 +6,16 @@
 // See: http://www.html5rocks.com/en/tutorials/indexeddb/todo/
 
 import 'dart:html';
-import 'dart:indexed_db' as idb;
+import 'package:idb_shim/idb_browser.dart' as idb;
+import 'package:idb_shim/idb_client.dart' as idb;
+//import 'dart:indexed_db' as idb;
 import 'dart:async';
 
+//idb.IdbFactory idbFactory = window.indexedDB;
+idb.IdbFactory idbFactory;
+
 class TodoList {
-  static final String _TODOS_DB = "todo";
+  static final String _TODOS_DB = "com.tekartik.idb.todo";
   static final String _TODOS_STORE = "todos";
 
   idb.Database _db;
@@ -25,7 +30,8 @@ class TodoList {
   }
 
   Future open() {
-    return window.indexedDB.open(_TODOS_DB, version: _version,
+    //return window.indexedDB.open(_TODOS_DB, version: _version,
+    return idbFactory.open(_TODOS_DB, version: _version,
         onUpgradeNeeded: _onUpgradeNeeded)
       .then(_onDbOpened)
       .catchError(_onError);
@@ -102,6 +108,40 @@ class TodoList {
   }
 }
 
+/**
+ * Typically the argument is window.location.search
+ */
+Map<String, String> getArguments(String search) {
+  Map<String, String> params = new Map();
+  if (search != null) {
+    int questionMarkIndex = search.indexOf('?');
+    if (questionMarkIndex != -1) {
+      search = search.substring(questionMarkIndex + 1);
+    }
+    search.split("&").forEach((e) {
+      if (e.contains("=")) {
+        List<String> split = e.split("=");
+        params[split[0]] = split[1];
+      } else {
+        if (!e.isEmpty) {
+          params[e] = '';
+        }
+      }
+    });
+  }
+  return params;
+}
+
 void main() {
-  new TodoList().open();
+  var urlArgs = getArguments(window.location.search);
+  String idbFactoryName = urlArgs['idb_factory'];
+  // init factory from url
+  idbFactory = idb.getIdbFactory(idbFactoryName);
+  if (idbFactory == null) {
+    window.alert("No idbFactory of type '$idbFactoryName' supported on this browser");    
+  } else {
+    querySelector("#idb span").innerHtml = "Using '${idbFactory.name}'";
+    new TodoList().open();  
+  }
+  
 }
