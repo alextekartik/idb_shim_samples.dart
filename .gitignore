@@ -9,5 +9,8 @@ packages/
 *.js.deps
 *.js.map
 
+# markdown eclipse plugin
+.*.md.html
+
 # Include when developing application packages.
 pubspec.lock
