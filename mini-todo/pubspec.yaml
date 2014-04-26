@@ -1,0 +1,4 @@
+name: mini_todo
+description: A sample todo application
+dependencies:
+  browser: any
