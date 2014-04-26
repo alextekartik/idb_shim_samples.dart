@@ -3,5 +3,6 @@ description: A sample todo application using idb_shim
 dependencies:
   browser: any
   idb_shim: any
+#  idb_shim:
 #    git: https://github.com/alextekartik/idb_shim.dart
 #    path: ../../idb_shim.dart

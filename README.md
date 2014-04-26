@@ -1,4 +1,6 @@
-idb_shim_samples.dart
-=====================
+# Dart idb shim samples
 
-Sample using idb_shim.dart
+Samples using [idb_shim.dart](http://alextekartik.github.io/idb_shim.dart/)
+
+* Project [home page](http://alextekartik.github.io/idb_shim_samples.dart/)
+
