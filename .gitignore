@@ -1,0 +1,8 @@
+# mini-todo
+pubspec.lock
+mini-todo/web
+mini-todo/packages
+
+mini-todo/build/web/packages/$sdk
+
+*.dart.precompiled.js
