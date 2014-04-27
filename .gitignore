@@ -1,7 +1,9 @@
 # mini-todo
+# from master
 pubspec.lock
-mini-todo/web
-mini-todo/packages
+*/web
+*/packages
+*/tool
 
 **/web/packages/$sdk
 
