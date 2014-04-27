@@ -3,7 +3,7 @@ pubspec.lock
 mini-todo/web
 mini-todo/packages
 
-mini-todo/build/web/packages/$sdk
+**/web/packages/$sdk
 
 # build files not needed
 *.dart.precompiled.js
@@ -12,4 +12,4 @@ mini-todo/build/web/packages/$sdk
 .*.md.html
 
 # interop.js no longer needed
-mini-todo/build/web/packages/browser/interop.js
+*/*/web/packages/browser/interop.js
