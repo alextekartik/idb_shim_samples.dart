@@ -4,6 +4,11 @@ pubspec.lock
 */web
 */packages
 */tool
+packages
+
+
+# from master
+doc/
 
 **/web/packages/$sdk
 
