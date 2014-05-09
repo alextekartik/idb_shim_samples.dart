@@ -1,0 +1,9 @@
+name: tutorial_count_down
+description: A port of count_down sample using idb_shim
+dependencies:
+  browser: any
+  dart_to_js_script_rewriter: '>=0.0.1+2 <0.1.0'
+  idb_shim: any
+  polymer: ">=0.9.0 <0.10.0"
+transformers:
+- dart_to_js_script_rewriter
