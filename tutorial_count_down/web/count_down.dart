@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:indexed_db';
+import 'package:idb_shim/idb_browser.dart';
+import 'package:idb_shim/idb_client.dart';
+import 'dart:html';
 import 'milestone.dart';
 import 'package:polymer/polymer.dart';
 
@@ -20,6 +22,29 @@ import 'package:polymer/polymer.dart';
 
 MilestoneApp appObject = new MilestoneApp();
 
+/**
+ * Typically the argument is window.location.search
+ */
+Map<String, String> getArguments(String search) {
+  Map<String, String> params = new Map();
+  if (search != null) {
+    int questionMarkIndex = search.indexOf('?');
+    if (questionMarkIndex != -1) {
+      search = search.substring(questionMarkIndex + 1);
+    }
+    search.split("&").forEach((e) {
+      if (e.contains("=")) {
+        List<String> split = e.split("=");
+        params[split[0]] = split[1];
+      } else {
+        if (!e.isEmpty) {
+          params[e] = '';
+        }
+      }
+    });
+  }
+  return params;
+}
 
 class MilestoneApp extends Observable {
   /****
@@ -27,37 +52,53 @@ class MilestoneApp extends Observable {
    */
   // When there are no active milestones, timer is null.
   Timer timer = null;
-  
+
+  IdbFactory _idbFactory;
+
   // Is IndexedDB supported in this browser?
-  bool idbAvailable = IdbFactory.supported;
-  
+  // Get the idb_shim to use from the url for testing
+  bool _idbAvailable;
+  bool get idbAvailable {
+    var urlArgs = getArguments(window.location.search);
+    String idbFactoryName = urlArgs['idb_factory'];
+    // init factory from url
+    _idbFactory = getIdbFactory(idbFactoryName);
+    if (_idbFactory == null) {
+      return false;
+    } else {
+      querySelector("#idb span").innerHtml = "Using '${_idbFactory.name}'";
+      return true;
+    }
+  }
+
   // A place to save the milestones (is the MODEL).
-  MilestoneStore _store = new MilestoneStore();
-  
+  MilestoneStore _store;
+
   // Called from the VIEW.
   @observable bool hazMilestones;
-  
+
   // The list of milestones in the MODEL.
   List<Milestone> get milestones => _store.milestones;
- 
+
   /****
    * Life-cycle methods...
    */
-  
+
   // Called from the VIEW when the element is inserted into the DOM.
   Future start() {
     if (!idbAvailable) {
       return new Future.error('IndexedDB not supported.');
     }
     
+    _store = new MilestoneStore(_idbFactory);
+
     return _store.open().then((_) {
       _startMilestoneTimer();
-      hazMilestones = notifyPropertyChange(const Symbol('hazMilestones'),
-          hazMilestones, (milestones.length == 0) ? false : true);
+      hazMilestones = notifyPropertyChange(const Symbol('hazMilestones'), hazMilestones, (milestones.length == 0) ? false : true);
 
     });
   }
-  
+
   // Called from the VIEW when the element is removed from the DOM.
   void stop() {
     _stopMilestoneTimer(true);
@@ -68,35 +109,33 @@ class MilestoneApp extends Observable {
    * Called from the VIEW (tute_countdown) when the user clicks a button.
    * Delegates to MODEL.
    */
-  
+
   void addMilestone(String milestoneName, DateTime occursOn) {
     // Make sure milestone is in the future, and not in the past.
     if (occursOn.isAfter(new DateTime.now())) {
       _store.add(milestoneName, occursOn).then((_) {
         _startMilestoneTimer();
-        hazMilestones = notifyPropertyChange(const Symbol('hazMilestones'),
-            hazMilestones, (milestones.length == 0) ? false : true);
-      },
-      onError: (e) { print('duplicate key'); } );
+        hazMilestones = notifyPropertyChange(const Symbol('hazMilestones'), hazMilestones, (milestones.length == 0) ? false : true);
+      }, onError: (e) {
+        print('duplicate key');
+      });
     }
   }
 
   Future removeMilestone(Milestone milestone) {
     return _store.remove(milestone).then((_) {
       _stopMilestoneTimer(false);
-      hazMilestones = notifyPropertyChange(const Symbol('hazMilestones'),
-          hazMilestones, (milestones.length == 0) ? false : true);
-   });
+      hazMilestones = notifyPropertyChange(const Symbol('hazMilestones'), hazMilestones, (milestones.length == 0) ? false : true);
+    });
   }
-  
+
   Future clear() {
     return _store.clear().then((_) {
       _stopMilestoneTimer(false);
-      hazMilestones = notifyPropertyChange(const Symbol('hazMilestones'),
-          hazMilestones, (milestones.length == 0) ? false : true);
+      hazMilestones = notifyPropertyChange(const Symbol('hazMilestones'), hazMilestones, (milestones.length == 0) ? false : true);
     });
   }
-   
+
   /****
    * Timer stuff.
    */
@@ -104,11 +143,11 @@ class MilestoneApp extends Observable {
   void _startMilestoneTimer() {
     if (timer == null && milestones.length > 0) {
       // The timer goes off every second.
-      var oneSecond = new Duration(seconds:1);
+      var oneSecond = new Duration(seconds: 1);
       timer = new Timer.periodic(oneSecond, _tick);
     }
   }
-  
+
   // Turn off the timer if no milestones or they are all elapsed.
   void _stopMilestoneTimer(bool quitting) {
     if (quitting || (timer != null && milestones.where((m) => !m.elapsed).isEmpty)) {
@@ -116,7 +155,7 @@ class MilestoneApp extends Observable {
       timer = null;
     }
   }
-  
+
   // Update the display for each milestone.
   void _tick(Timer _) {
     // For each milestone, update the time remaining...

@@ -14,3 +14,9 @@ h1, p {
 button {
   font-weight: bold;
 }
+
+#idb {
+  background-color: #EEE;
+  padding: 5px;
+  margin-bottom: 5px;
+}

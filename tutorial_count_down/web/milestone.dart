@@ -6,8 +6,7 @@ library milestone;
 
 import 'package:polymer/polymer.dart';
 import 'dart:async';
-import 'dart:html';
-import 'dart:indexed_db';
+import 'package:idb_shim/idb_client.dart';
 
 /*
  * The MODEL for the app.
@@ -98,9 +97,11 @@ class MilestoneStore {
   final List<Milestone> milestones = toObservable(new List());
   
   Database _db;
+  IdbFactory _idbFactory;
+  MilestoneStore(this._idbFactory);
   
   Future open() {
-    return window.indexedDB.open('milestoneDB',
+    return _idbFactory.open('milestoneDB',
         version: 1,
         onUpgradeNeeded: _initializeDatabase)
       .then(_loadFromDB);

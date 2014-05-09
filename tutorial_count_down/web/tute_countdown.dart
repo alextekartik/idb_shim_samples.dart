@@ -5,7 +5,7 @@
 // Some things we need.
 import 'package:polymer/polymer.dart';
 import 'dart:html';
-import 'dart:async';
+//import 'dart:async';
 import 'count_down.dart';
 
 @CustomTag('tute-count-down')
