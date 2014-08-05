@@ -28,3 +28,10 @@ li a {
 #todo {
   width: 200px;
 }
+
+#version {
+  text-align: right;
+  color: #aaa;
+  font-size: smaller;
+  font-style: italic;
+}
