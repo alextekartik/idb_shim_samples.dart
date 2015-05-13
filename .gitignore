@@ -2,6 +2,7 @@
 build/
 packages/
 packages
+.pub/
 
 # our own build system
 deploy/
