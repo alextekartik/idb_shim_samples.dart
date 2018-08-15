@@ -31,10 +31,10 @@ class TodoList {
 
   Future open() {
     //return window.indexedDB.open(_TODOS_DB, version: _version,
-    return idbFactory.open(_TODOS_DB, version: _version,
-        onUpgradeNeeded: _onUpgradeNeeded)
-      .then(_onDbOpened)
-      .catchError(_onError);
+    return idbFactory
+        .open(_TODOS_DB, version: _version, onUpgradeNeeded: _onUpgradeNeeded)
+        .then(_onDbOpened)
+        .catchError(_onError);
   }
 
   void _onError(e) {
@@ -67,16 +67,18 @@ class TodoList {
   Future _addTodo(String text) {
     var trans = _db.transaction(_TODOS_STORE, 'readwrite');
     var store = trans.objectStore(_TODOS_STORE);
-    return store.put({
-      'text': text,
-      'timeStamp': new DateTime.now().millisecondsSinceEpoch.toString()
-    }).then((_) => _getAllTodoItems())
-    .catchError((e) => _onError);
+    return store
+        .put({
+          'text': text,
+          'timeStamp': new DateTime.now().millisecondsSinceEpoch.toString()
+        })
+        .then((_) => _getAllTodoItems())
+        .catchError((e) => _onError);
   }
 
   void _deleteTodo(String id) {
     var trans = _db.transaction(_TODOS_STORE, 'readwrite');
-    var store =  trans.objectStore(_TODOS_STORE);
+    var store = trans.objectStore(_TODOS_STORE);
     var request = store.delete(id);
     request.then((e) => _getAllTodoItems(), onError: _onError);
   }
@@ -88,7 +90,7 @@ class TodoList {
     var store = trans.objectStore(_TODOS_STORE);
 
     // Get everything in the store.
-    store.openCursor(autoAdvance:true).listen((cursor) {
+    store.openCursor(autoAdvance: true).listen((cursor) {
       _renderTodo(cursor.value);
     }, onError: _onError);
   }
@@ -138,10 +140,10 @@ void main() {
   // init factory from url
   idbFactory = idb.getIdbFactory(idbFactoryName);
   if (idbFactory == null) {
-    window.alert("No idbFactory of type '$idbFactoryName' supported on this browser");    
+    window.alert(
+        "No idbFactory of type '$idbFactoryName' supported on this browser");
   } else {
     querySelector("#idb span").innerHtml = "Using '${idbFactory.name}'";
-    new TodoList().open();  
+    new TodoList().open();
   }
-  
 }
