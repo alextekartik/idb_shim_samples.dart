@@ -1,0 +1,16 @@
+name: tekartik_test_menu_repo
+description: Test menu repo (tools)
+version: 0.6.0
+publish_to: none
+#homepage: https://www.example.com
+#author: alex <email@example.com>
+
+environment:
+  sdk: '>=2.6.0 <3.0.0'
+
+dev_dependencies:
+  process_run: '>=0.10.0+1'
+  chrome_travis:
+    git:
+      url: git://github.com/tekartik/chrome_travis.dart
+      ref: dart2
