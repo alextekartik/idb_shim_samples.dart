@@ -6,7 +6,6 @@
 // See: http://www.html5rocks.com/en/tutorials/indexeddb/todo/
 
 import 'package:idb_shim/idb_browser.dart' as idb;
-import 'package:idb_shim/idb_client.dart' as idb;
 
 import 'package:web/web.dart';
 //import 'dart:indexed_db' as idb;
@@ -151,7 +150,7 @@ void main() {
         'No idbFactory of type \'$idbFactoryName\' supported on this browser');
   } else {
     idbFactory = factory;
-    document.querySelector('#idb span')!.innerHTML =
+    document.querySelector('#idb span')!.textContent =
         'Using \'${idbFactory.name}\'';
     TodoList().open();
   }
