@@ -39,7 +39,7 @@ class TodoList {
         .catchError(_onError);
   }
 
-  void _onError(e) {
+  void _onError(Object e) {
     // Get the user's attention for the sake of this tutorial. (Of course we
     // would *never* use window.alert() in real life.)
     window.alert('Oh no! Something went wrong. See the console for details.');
@@ -72,7 +72,7 @@ class TodoList {
     return store
         .put({
           'text': text,
-          'timeStamp': DateTime.now().millisecondsSinceEpoch.toString()
+          'timeStamp': DateTime.now().millisecondsSinceEpoch.toString(),
         })
         .then((_) => _getAllTodoItems())
         .catchError((e) => _onError);
@@ -105,7 +105,7 @@ class TodoList {
   void _renderTodo(Map todoItem) {
     print(todoItem);
     var textDisplay = HTMLSpanElement();
-    textDisplay.text = todoItem['text'].toString();
+    textDisplay.textContent = todoItem['text'].toString();
 
     var deleteControl = HTMLAnchorElement();
     deleteControl.text = '[Delete]';
@@ -147,7 +147,8 @@ void main() {
   var factory = idb.getIdbFactory(idbFactoryName);
   if (factory == null) {
     window.alert(
-        'No idbFactory of type \'$idbFactoryName\' supported on this browser');
+      'No idbFactory of type \'$idbFactoryName\' supported on this browser',
+    );
   } else {
     idbFactory = factory;
     document.querySelector('#idb span')!.textContent =

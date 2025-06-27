@@ -1,7 +1,7 @@
 name: mini_todo
 description: A sample todo application using idb_shim
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.8.0
 dependencies:
   idb_shim: '>=2.6.1+6'
   web:
