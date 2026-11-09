@@ -1,18 +1,31 @@
-## Simple Todo App using IndexedDB
+## Simple todo app using idb_shim
 
-A port of the Todo example used in the
-[A Simple TODO list using HTML5 IndexedDB](http://www.html5rocks.com/en/tutorials/file/filesystem/)
-article by Paul Kinlan, originally published on HTML5Rocks.
+A small todo list stored in IndexedDB through
+[idb_shim](https://pub.dev/packages/idb_shim). It is a Dart port of the
+"A Simple TODO list using HTML5 IndexedDB" article by Paul Kinlan, once
+published on HTML5Rocks.
 
-The example demonstrates how to create a very simple todo
-list manager using IndexedDB.
+### Run it
 
-IndexedDB is a data store that developers can use to store and manipulate data
-on the client side. IndexedDB is usually used as an Asynchronous API where the
-data is delivered to a defined callback function.
+From the `tutorial_todo` folder:
 
-You can open the example in Dart Editor and run it by clicking `index.html`.
-Or, you can try this
-[live demo](http://www.html5rocks.com/en/tutorials/indexeddb/todo/).
+```sh
+dart pub get
+dart run build_runner serve web:8080
+```
 
-Please report any [bugs or feature requests](http://dartbug.com/new).
+then open http://localhost:8080 in a browser.
+
+The links at the top of the page choose the idb_shim factory
+(`?idb_factory=<name>`): `browser`, `native` and `persistent` use the
+browser IndexedDB, `memory` keeps the todos in memory (lost on reload).
+
+### What it shows
+
+- `idbFactory.open` with `onUpgradeNeeded` creating the `todos` store
+  (key path `timeStamp`).
+- `put`, `delete` and a cursor (`openCursor(autoAdvance: true)`) in
+  transactions, the list refreshed after each change.
+- `getIdbFactory(name)` to pick a factory by name.
+
+`test/todo_test.dart` (`dart test -p chrome`) checks the factory of each link.

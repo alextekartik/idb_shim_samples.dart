@@ -75,7 +75,7 @@ class TodoList {
           'timeStamp': DateTime.now().millisecondsSinceEpoch.toString(),
         })
         .then((_) => _getAllTodoItems())
-        .catchError((e) => _onError);
+        .catchError(_onError);
   }
 
   void _deleteTodo(String id) {
@@ -140,11 +140,21 @@ Map<String, String> getArguments(String? search) {
   return params;
 }
 
+/// The factory named [name] (browser, native, persistent or memory, browser
+/// when null), null if not supported on this browser.
+idb.IdbFactory? idbFactoryFromName(String? name) {
+  try {
+    return idb.getIdbFactory(name);
+  } on UnsupportedError catch (_) {
+    return null;
+  }
+}
+
 void main() {
   var urlArgs = Uri.tryParse(window.location.search)?.queryParameters;
   var idbFactoryName = urlArgs?['idb_factory'];
   // init factory from url
-  var factory = idb.getIdbFactory(idbFactoryName);
+  var factory = idbFactoryFromName(idbFactoryName);
   if (factory == null) {
     window.alert(
       'No idbFactory of type \'$idbFactoryName\' supported on this browser',

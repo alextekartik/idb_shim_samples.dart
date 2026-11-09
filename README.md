@@ -1,6 +1,9 @@
 # Dart idb shim samples
 
-Samples using [idb_shim.dart](http://alextekartik.github.io/idb_shim.dart/)
+Samples using [idb_shim](https://pub.dev/packages/idb_shim)
+([source](https://github.com/tekartik/idb_shim.dart)):
 
-* Project [home page](http://alextekartik.github.io/idb_shim_samples.dart/)
+* [tutorial_todo](tutorial_todo/web/README.md): a small todo list stored in
+  IndexedDB.
 
+Project [home page](https://alextekartik.github.io/idb_shim_samples.dart/)
